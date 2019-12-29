@@ -125,7 +125,9 @@ function onKeyDown(event) {
           break;
   }
 
-  update();
+  setTimeout(update, 70);
+
+  return false;
 }
 
 function applyRowOffset() {
@@ -133,22 +135,20 @@ function applyRowOffset() {
     return;
   }
 
+  var scrollEl = document.querySelector('.grid');
+
   var height = document.querySelector('.grid > *').scrollHeight;
   var gap = vhToPx(5 /* gap in vh */);
   var offset = state.row_offset;
 
   var diff = (height + gap) * offset;
-  var value = document.body.scrollTop + diff;
+  var value = scrollEl.scrollTop + diff;
 
   state.row_offset = 0;
 
   console.log(value);
 
-  document.body.scroll({
-    top: value,
-    left: 0,
-    behavior: 'smooth',
-  });
+  scrollEl.scroll(0, value);
 }
 
 function update() {
