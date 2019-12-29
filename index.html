@@ -38,6 +38,13 @@ body {
   scroll-snap-align: start;
 }
 
+.grid :last-child:after {
+  display: block;
+  content: '';
+  height: 15vw;
+  margin-bottom: 30vw;
+}
+
 .active {
   background: green;
 }
