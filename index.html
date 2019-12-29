@@ -95,13 +95,15 @@ function updateActiveElement(col_offset) {
   return active;
 }
 
+function clamp(min, val, max) {
+  return Math.min(Math.max(min, val), max);
+}
+
+// return: -1 = left, 0 = center, +1 = right
 function getColumnOffset() {
   return state.column_offset;
 }
 
-function clamp(min, val, max) {
-  return Math.min(Math.max(min, val), max);
-}
 
 // params:
 //  adj: -1 = move left, 0 = no change, +1 = move right
@@ -137,6 +139,13 @@ function onKeyDown(event) {
   return false;
 }
 
+function itemHeightWithGap() {
+  var height = document.querySelector('.grid > *').scrollHeight;
+  var gap = vhToPx(5 /* gap in vh */);
+
+  return height + gap;
+}
+
 function applyRowOffset() {
   if (state.row_offset == 0) {
     return;
@@ -144,11 +153,9 @@ function applyRowOffset() {
 
   var scrollEl = document.querySelector('.grid');
 
-  var height = document.querySelector('.grid > *').scrollHeight;
-  var gap = vhToPx(5 /* gap in vh */);
   var offset = state.row_offset;
 
-  var diff = (height + gap) * offset;
+  var diff = itemHeightWithGap() * offset;
   var value = scrollEl.scrollTop + diff;
 
   state.row_offset = 0;
@@ -158,9 +165,47 @@ function applyRowOffset() {
   scrollEl.scroll(0, value);
 }
 
+function kludge__fudgeColumnOffset(value) {
+  var scrollEl = document.querySelector('.grid');
+  var offset = state.column_offset;
+  var scrollRemaining = scrollEl.scrollHeight - scrollEl.scrollTop;
+  // Give ourselves some wiggle room because ?? FLOATING POINT MATH ???
+  scrollRemaining -= 5;
+
+  //console.log("???", scrollEl.scrollHeight, scrollEl.scrollTop);
+  console.log("!!!", scrollRemaining, itemHeightWithGap() * 3);
+
+  // If we have enough room for 3 items, that means
+  // we have at least one real item + the two fake ones added via padding.
+  if (scrollRemaining >= (itemHeightWithGap() * 3)) {
+    return value;
+  }
+
+  var numItems = document.querySelectorAll('.grid > *').length
+
+  var colsOnLastRow = (numItems % 3);
+  if (colsOnLastRow == 0) {
+    // if it returned 0, we have 3 items on the last row.
+    return value;
+  }
+
+  var max_value = 0;
+  if (colsOnLastRow == 1) {
+    max_value = -1;
+  } else if (colsOnLastRow == 2) {
+    max_value = 0;
+  }
+
+  value = Math.min(max_value, value);
+
+  console.log("last row has only ", colsOnLastRow, "; going with ", value, ".");
+  return value;
+}
+
 function update() {
   applyRowOffset();
-  updateActiveElement(getColumnOffset());
+  var col = kludge__fudgeColumnOffset(getColumnOffset());
+  updateActiveElement(col);
 }
 
 document.addEventListener("keydown", onKeyDown);
