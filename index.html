@@ -1,2 +1,62 @@
 <!doctype html>
-<p>*shrugs forever*</p>
+<style>
+html {
+  box-sizing: border-box;
+  text-rendering: optimizeLegibility;
+  font-family: sans-serif;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+body {
+  font-family: Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+  font-size: 100%;
+  line-height: 1.5em;
+  color: #24292e;
+  background-color: #fff;
+  margin: 0;
+  padding: 0;
+}
+
+.grid {
+  width: 100%;
+  margin: auto;
+  padding: 10vh 25vw;
+  display: grid;
+  gap: 2em;
+  grid-template-columns: repeat(3, 15vw);
+  grid-template-rows: repeat(30, 15vw);
+  scroll-snap-type: both mandatory;
+  scroll-padding: 10vh;
+  overflow: auto;
+  height: 100vh;
+}
+.grid > * {
+  display: block;
+  border: 1px solid black;
+  scroll-snap-align: start;
+}
+</style>
+
+<section class="grid">
+  <section>1</section>
+  <section>2</section>
+  <section>3</section>
+  <section>4</section>
+  <section>5</section>
+  <section>6</section>
+  <section>7</section>
+  <section>8</section>
+  <section>9</section>
+  <section>10</section>
+  <section>11</section>
+  <section>12</section>
+  <section>13</section>
+  <section>14</section>
+  <section>15</section>
+  <section>16</section>
+  <section>17</section>
+  <section>18</section>
+  <section>19</section>
+</section>
