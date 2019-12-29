@@ -24,7 +24,7 @@ body {
   margin: auto;
   padding: 10vh 25vw;
   display: grid;
-  gap: 2em;
+  gap: 5vh;
   grid-template-columns: repeat(3, 15vw);
   grid-template-rows: repeat(30, 15vw);
   scroll-snap-type: both mandatory;
@@ -37,7 +37,127 @@ body {
   border: 1px solid black;
   scroll-snap-align: start;
 }
+
+.active {
+  background: green;
+}
 </style>
+
+<script>
+var state = {
+  column_offset: 0,
+  row_offset: 0,
+};
+
+function vwToPx(vw) {
+  var e = document.documentElement;
+  var g = document.getElementsByTagName('body')[0];
+  var x = window.innerWidth || e.clientWidth || g.clientWidth;
+  var y = window.innerHeight|| e.clientHeight|| g.clientHeight;
+
+  return x * vw / 100;
+}
+
+function vhToPx(vh) {
+  var e = document.documentElement;
+  var g = document.getElementsByTagName('body')[0];
+  var y = window.innerHeight|| e.clientHeight|| g.clientHeight;
+
+  return y * vh / 100;
+}
+
+function elementAtTopCenter(col_offset) {
+  var x_offset = (vwToPx(col_offset * (15 + 1)) +
+        vhToPx(col_offset * 5 /* gap */));
+
+  var y = vhToPx(10 /* vertical offset */ + 1);
+  var x = vwToPx(25 /* padding */ + 15 /* width */ + 5 /* gap */ + 1);
+
+  x += x_offset;
+
+  return document.elementFromPoint(x, y);
+}
+
+function updateActiveElement(col_offset) {
+  var active = elementAtTopCenter(col_offset);
+
+  document.querySelectorAll('.grid > *').forEach(function (el) {
+    el.classList.toggle('active', active === el);
+  });
+
+  return active;
+}
+
+function getColumnOffset() {
+  return state.column_offset;
+}
+
+function clamp(min, val, max) {
+  return Math.min(Math.max(min, val), max);
+}
+
+// params:
+//  adj: -1 = move left, 0 = no change, +1 = move right
+// return: -1 = left, 0 = center, +1 = right
+function adjustColumnOffset(adj) {
+  var val = state.column_offset + adj;
+  state.column_offset = clamp(-1, val, 1);
+  return state.column_offset;
+}
+
+function adjustRowOffset(adj) {
+  state.row_offset += adj;
+}
+
+function onKeyDown(event) {
+    switch (event.keyCode) {
+      case 37 /* left */:
+          adjustColumnOffset(-1);
+          break;
+      case 38 /* up */:
+          adjustRowOffset(-1);
+          break;
+      case 39 /* right */:
+          adjustColumnOffset(+1);
+          break;
+      case 40:
+          adjustRowOffset(+1);
+          break;
+  }
+
+  update();
+}
+
+function applyRowOffset() {
+  if (state.row_offset == 0) {
+    return;
+  }
+
+  var height = document.querySelector('.grid > *').scrollHeight;
+  var gap = vhToPx(5 /* gap in vh */);
+  var offset = state.row_offset;
+
+  var diff = (height + gap) * offset;
+  var value = document.body.scrollTop + diff;
+
+  state.row_offset = 0;
+
+  console.log(value);
+
+  document.body.scroll({
+    top: value,
+    left: 0,
+    behavior: 'smooth',
+  });
+}
+
+function update() {
+  applyRowOffset();
+  updateActiveElement(getColumnOffset());
+}
+
+document.addEventListener("keydown", onKeyDown);
+</script>
 
 <section class="grid">
   <section>1</section>
