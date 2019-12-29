@@ -42,7 +42,7 @@ body {
   display: block;
   content: '';
   height: 15vw;
-  margin-bottom: 30vw;
+  margin-bottom: 60vw;
 }
 
 .active {
@@ -172,12 +172,9 @@ function kludge__fudgeColumnOffset(value) {
   // Give ourselves some wiggle room because ?? FLOATING POINT MATH ???
   scrollRemaining -= 5;
 
-  //console.log("???", scrollEl.scrollHeight, scrollEl.scrollTop);
-  console.log("!!!", scrollRemaining, itemHeightWithGap() * 3);
-
-  // If we have enough room for 3 items, that means
-  // we have at least one real item + the two fake ones added via padding.
-  if (scrollRemaining >= (itemHeightWithGap() * 3)) {
+  // If we have enough room for 5 items, that means
+  // we have at least one real item + the 4 fake ones added via padding.
+  if (scrollRemaining >= (itemHeightWithGap() * 5)) {
     return value;
   }
 
