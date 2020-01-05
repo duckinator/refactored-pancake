@@ -12,3 +12,6 @@ class InterfaceApp(App):
 
 def main(_args=None):
     InterfaceApp().run()
+
+if __name__ == '__main__':
+    main()
