@@ -9,6 +9,11 @@ class InterfaceApp(App):
     # The value should be the directory this file is in.
     kv_directory = 'blah'
 
+    def on_start(self):
+        print('owo')
+        for child in self.root_window.children[0].children:
+            print(child, child.height, child.width)
+        #row_default_height = 
 
 def main(_args=None):
     InterfaceApp().run()
