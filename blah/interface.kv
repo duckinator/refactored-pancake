@@ -1,22 +1,36 @@
 #:kivy 1.0
 # vim: tabstop=4 expandtab shiftwidth=4
 
-GridLayout:
-    rows: 4
-    cols: 3
-    padding: 0
-    #(self.width - root.height) / 2
-    spacing: root.height / 4 / 2
-    col_default_width: root.height / 4
-    row_default_height: root.height / 4
-    col_force_default: True
-    row_force_default: True
-    Button:
-        text: 'Plex'
-        on_press: print('plex')
-    Button:
-        text: 'YouTube'
-        on_press: print('youtube')
-    Button:
-        text: 'Firefox'
-        on_press: print('firefox')
+AnchorLayout:
+    # AnchorLayout defaults to 100% of width + height, and centers everything.
+    GridLayout:
+        # The entire grid layout is set to 75% of the AnchorLayout.
+        size_hint: (0.75, 1.0)
+        rows: 4
+        cols: 3
+        # Set vertical padding to arbitrary value that looks decent.
+        padding: [0, self.height / 10]
+
+        # - `root.width * 0.75` is the width of the GridLayout.
+        # - `root.width * 0.75 / 4` is 1/4th of that.
+        #
+        # We have 3 columns, set to 1/4th of the width of the GridLayout.
+        # This means we have 1/4th of the width left.
+        #
+        # We use this up by setting the spacing (which occurs twice,
+        # horizontally) to 1/8th of the width.
+        spacing: root.width * 0.75 / 8
+        col_default_width: root.width * 0.75 / 4
+        row_default_height: root.width * 0.75 / 4
+
+        col_force_default: True
+        row_force_default: True
+        Button:
+            text: 'Plex'
+            on_press: print('plex')
+        Button:
+            text: 'YouTube'
+            on_press: print('youtube')
+        Button:
+            text: 'Firefox'
+            on_press: print('firefox')
