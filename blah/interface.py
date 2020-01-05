@@ -9,6 +9,14 @@ class InterfaceApp(App):
     # The value should be the directory this file is in.
     kv_directory = 'blah'
 
+    def on_start(self):
+        for child in self.root.children[0].children:
+            child.bind(on_press=self.start)
+
+    @staticmethod
+    def start(button):
+        print(button.text)
+
 
 def main(_args=None):
     InterfaceApp().run()
