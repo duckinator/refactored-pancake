@@ -2,16 +2,16 @@ from subprocess import check_call as run
 
 
 def firefox():
-    pass
+    run(['firefox'])
 
 
-def firefox_incognito():
-    pass
+def firefox_private_window():
+    run(['firefox', '--private-window'])
 
 
 def youtube():
-    pass
+    run(['firefox', '--kiosk', 'https://youtube.com'])
 
 
 def plex():
-    pass
+    run(['firefox', '--kiosk', 'https://plex.tv'])
