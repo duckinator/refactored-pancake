@@ -1,17 +1,19 @@
 from subprocess import check_call as run
 
+PROFILE_ARGS = ['-P', 'secondary']
+
 
 def firefox():
-    run(['firefox'])
+    run(['firefox', *PROFILE_ARGS])
 
 
 def firefox_private_window():
-    run(['firefox', '--private-window'])
+    run(['firefox', *PROFILE_ARGS, '--private-window'])
 
 
 def youtube():
-    run(['firefox', '--kiosk', 'https://youtube.com'])
+    run(['firefox', *PROFILE_ARGS, '--kiosk', 'https://youtube.com'])
 
 
 def plex():
-    run(['firefox', '--kiosk', 'https://plex.tv'])
+    run(['firefox', *PROFILE_ARGS, '--kiosk', 'https://plex.tv'])

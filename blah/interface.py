@@ -1,9 +1,16 @@
-import re
+from kivy.core.window import Window
+
+Window.borderless = True
+Window.left = 0
+Window.top = 0
+Window.size = (1920, 1080)
 
 import kivy
 kivy.require('1.0.7')
 
 from kivy.app import App
+
+import re
 
 from . import apps
 
