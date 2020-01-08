@@ -13,7 +13,15 @@ from kivy.app import App
 import re
 import subprocess
 
-from . import apps
+PROFILE_ARGS = ['-P', 'secondary']
+
+# TODO: See if this can, somehow, be integrated into interface.kv?
+APPS = {
+    'Firefox':  ['firefox', *PROFILE_ARGS],
+    'Firefox (Private Window)': ['firefox', *PROFILE_ARGS, '--private-window'],
+    'Plex': ['firefox', *PROFILE_ARGS, '--kiosk', 'https://plex.tv'],
+    'YouTube': ['firefox', *PROFILE_ARGS, '--kiosk', 'https://youtube.com'],
+}
 
 
 # Handles exactly one child process.
@@ -52,21 +60,13 @@ class InterfaceApp(App):
             child.bind(on_press=self.start)
 
     def start(self, button):
-        # Lowercase everything, replace spaces with underscore.
-        name = button.text.lower().replace(' ', '_')
-        # Replace anything that's not alphanumeric with underscores.'
-        name = re.sub(r'[^a-z0-9]', '_', name)
-        # Replace repeated underscores with one underscore.
-        name = re.sub(r'_+', '_', name)
-        # Remove leading and trailing underscores.
-        name = re.sub(r'^_|_$', '', name)
-        error_callback = lambda: self.error(name)
-        app_fn = getattr(apps, name, None)
-        if app_fn is None:
+        name = button.text
+
+        command = APPS.get(name, None)
+        if command is None:
             print('NO SUCH FUNCTION: {}'.format(name))
             return
 
-        command = app_fn()
         self.app.start(command)
 
 
