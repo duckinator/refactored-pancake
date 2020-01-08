@@ -1,0 +1,5 @@
+[apps]
+"Plex"                      = ["firefox", "--kiosk", "https://plex.tv"]
+"YouTube"                   = ["firefox", "--kiosk", "https://youtube.com"]
+"Firefox"                   = ["firefox"]
+"Firefox (Private Window)"  = ["firefox", "--private-window"]

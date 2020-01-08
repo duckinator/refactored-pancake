@@ -10,19 +10,11 @@ kivy.require('1.0.7')
 
 from kivy.app import App
 
+import toml
+
+from pathlib import Path
 import re
 import subprocess
-
-PROFILE_ARGS = ['-P', 'secondary']
-
-# TODO: See if this can, somehow, be integrated into interface.kv?
-APPS = {
-    'Firefox':  ['firefox', *PROFILE_ARGS],
-    'Firefox (Private Window)': ['firefox', *PROFILE_ARGS, '--private-window'],
-    'Plex': ['firefox', *PROFILE_ARGS, '--kiosk', 'https://plex.tv'],
-    'YouTube': ['firefox', *PROFILE_ARGS, '--kiosk', 'https://youtube.com'],
-}
-
 
 # Handles exactly one child process.
 # If you start one before the other one has exited, it gets replaced.
@@ -50,10 +42,20 @@ class ProcessHandler:
 class InterfaceApp(App):
     # This is required when the app is installed via pip.
     # The value should be the directory this file is in.
-    kv_directory = 'blah'
+    kv_directory = Path(__file__).resolve().parent
+    #'blah'
 
-    # Manages a single process for the various apps.
-    app = ProcessHandler()
+    def __init__(self):
+        # Manages a single process for the various apps.
+        self.app = ProcessHandler()
+
+        src_dir = Path(__file__).resolve().parent
+        apps_file = src_dir / 'apps.toml'
+
+        #if Path('../apps.custom.toml').exists():
+        #    apps_file = Path('../apps.custom.toml')
+        self.apps = toml.loads(apps_file.read_text())
+        print(self.apps)
 
     def on_start(self):
         for child in self.root.children[0].children:
@@ -68,7 +70,6 @@ class InterfaceApp(App):
             return
 
         self.app.start(command)
-
 
 def main(_args=None):
     InterfaceApp().run()
