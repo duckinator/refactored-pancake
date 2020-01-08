@@ -9,6 +9,7 @@ import kivy
 kivy.require('1.0.7')
 
 from kivy.app import App
+from kivy.uix.button import Button
 
 import toml
 
@@ -43,28 +44,32 @@ class InterfaceApp(App):
     # This is required when the app is installed via pip.
     # The value should be the directory this file is in.
     kv_directory = Path(__file__).resolve().parent
-    #'blah'
 
     def __init__(self):
+        super().__init__()
+
         # Manages a single process for the various apps.
         self.app = ProcessHandler()
 
         src_dir = Path(__file__).resolve().parent
         apps_file = src_dir / 'apps.toml'
 
-        #if Path('../apps.custom.toml').exists():
-        #    apps_file = Path('../apps.custom.toml')
-        self.apps = toml.loads(apps_file.read_text())
+        if Path('apps.custom.toml').exists():
+            apps_file = Path('apps.custom.toml')
+        self.apps = toml.loads(apps_file.read_text())['apps']
         print(self.apps)
 
     def on_start(self):
-        for child in self.root.children[0].children:
+        grid_layout = self.root.children[0]
+        for label in self.apps.keys():
+            child = Button(text=label)
             child.bind(on_press=self.start)
+            grid_layout.add_widget(child)
 
     def start(self, button):
         name = button.text
 
-        command = APPS.get(name, None)
+        command = self.apps.get(name, None)
         if command is None:
             print('NO SUCH FUNCTION: {}'.format(name))
             return
